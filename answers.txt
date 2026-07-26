@@ -1,0 +1,23 @@
+a. What is one major difference between the protocol in this project when compared to the TLS protocol?
+Answer:
+TLS uses digital certificates signed by trusted authorities to verify the server before sending data. Our project sends public keys unencrypted without any certificate checks. TLS also uses symmetric AES encryption for data, while our app uses RSA for everything.
+
+b. What flaws can you identify in the “secure” protocol?
+Answer:
+1. No certificate verification to prove server identity.
+2. Public keys are sent in plain text during connect.
+3. No sequence numbers or nonces to stop replay attacks.
+4. Uses static RSA keys so there is no forward secrecy.
+
+c. How could the “secure” server and client framework above be compromised?
+Answer:
+1. Man in the Middle attack: An attacker can swap the server public key with their own and read all traffic.
+2. Replay attack: An attacker can record encrypted packets and re send them to force duplicate actions.
+3. Denial of Service: Flooding connect requests forces the server to open too many sockets and crash.
+
+d. How could you improve the framework? Be specific with your answers.
+Answer:
+1. Use hybrid encryption by exchanging a symmetric AES key with RSA first.
+2. Add timestamps and sequence numbers to stop replay attacks.
+3. Add a challenge response check on login to verify client private key ownership.
+4. Use a single persistent TCP socket instead of separate dynamic ports.
